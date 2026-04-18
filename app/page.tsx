@@ -117,15 +117,16 @@ export default function Home() {
           }
         }
 
-        // HERO TYPEWRITER
+        // HERO TYPEWRITER (FIXED SPACING BUG)
         const sub = document.getElementById('welcome-sub')
         if (sub) {
-          const subText = sub.innerText
-          sub.innerText = ''
+          const subText = "Every trend. Every story. Every deal — extracted from the global pulse, in real time, just for you."
+          sub.textContent = ''
           let si = 0
           const typeIt = () => {
-            if (si < subText.length) {
-              sub.innerText += subText[si++]
+            if (si <= subText.length) {
+              sub.textContent = subText.substring(0, si)
+              si++
               setTimeout(typeIt, 28)
             }
           }
