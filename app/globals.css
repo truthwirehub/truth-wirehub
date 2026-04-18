@@ -1,11 +1,17 @@
-/* globals.css mein ye check karo */
+/* Force text to stay on top of canvas */
 .scene {
-  position: relative;
-  z-index: 10; /* Text ko upar rakhne ke liye */
-  color: white; /* Default color */
+  position: relative !important;
+  z-index: 10 !important;
 }
 
 .welcome-title, .scene-heading {
-  display: block;
-  opacity: 1 !important; /* Force visibility */
+  color: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+canvas {
+  position: fixed !important;
+  z-index: -1 !important; /* Hamesha sab se peeche */
 }
