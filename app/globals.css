@@ -2,42 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-:root {
-  --g: #00ffb4;
-}
-
 body {
-  background: #04040c !important;
-  color: #ffffff !important;
-  font-family: 'Segoe UI', sans-serif;
-  overflow-x: hidden;
-}
-
-/* Force Text Visibility */
-.scene {
-  position: relative !important;
-  z-index: 10 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-height: 100vh !important;
-}
-
-h1, h2, p {
-  color: #ffffff !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  position: relative !important;
-  z-index: 20 !important;
-}
-
-canvas {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  z-index: -1 !important; /* Hamesha peeche */
-  pointer-events: none;
+  background-color: #04040c !important;
+  margin: 0;
+  color: white;
 }
