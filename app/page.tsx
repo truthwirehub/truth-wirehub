@@ -1,90 +1,226 @@
-"use client";
-import React, { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { Stars, Float, MeshDistortMaterial, Sphere } from '@react-three/drei';
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-function Scene() {
-  return (
-    <>
-      {/* 3D Stars in Background */}
-      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
-      
-      {/* Floating 3D Morphing Shape */}
-      <Float speed={2} rotationIntensity={2} floatIntensity={2}>
-        <Sphere args={[1, 100, 200]} scale={1.5}>
-          <MeshDistortMaterial
-            color="#00ff41"
-            attach="material"
-            distort={0.5}
-            speed={2}
-            wireframe
-          />
-        </Sphere>
-      </Float>
-    </>
-  );
+const canvas = document.getElementById('particles');
+if (canvas) {
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = Array.from({ length: 120 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2 + 0.5,
+    dx: (Math.random() - 0.5) * 0.6,
+    dy: (Math.random() - 0.5) * 0.6,
+    alpha: Math.random() * 0.6 + 0.2
+  }));
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 255, 180, ${p.alpha})`;
+      ctx.fill();
+      p.x += p.dx;
+      p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
 }
 
-export default function Home() {
-  return (
-    <main className="relative min-h-screen bg-black text-white overflow-hidden font-mono">
-      {/* 3D Background Canvas */}
-      <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 0, 5] }}>
-          <Suspense fallback={null}>
-            <Scene />
-          </Suspense>
-        </Canvas>
-      </div>
+const revealSections = document.querySelectorAll('.section');
+revealSections.forEach((section, i) => {
+  const colors = ['#0a0a0f', '#050d1a', '#080a0f', '#0d0510', '#050f0a'];
+  ScrollTrigger.create({
+    trigger: section,
+    start: 'top 80%',
+    onEnter: () => {
+      document.body.style.background = colors[i % colors.length];
+    }
+  });
 
-      {/* UI Overlay */}
-      <div className="relative z-10 p-8 md:p-12 flex flex-col min-h-screen">
-        <header className="flex justify-between items-start mb-20">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-white to-green-500">
-              TRUTH WIREHUB
-            </h1>
-            <p className="text-gray-500 text-[10px] tracking-[0.3em]">AUTOMATED DATA ECOSYSTEM</p>
-          </div>
-          <div className="flex items-center gap-3 border border-green-900 bg-green-950/20 px-4 py-2 rounded-full">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span className="text-green-400 text-[10px]">ENGINE: RUNNING</span>
-          </div>
-        </header>
-
-        <section className="flex-1 flex items-center justify-center">
-          <div className="w-full max-w-2xl border border-gray-800 rounded-2xl bg-black/40 backdrop-blur-xl overflow-hidden shadow-[0_0_50px_rgba(0,255,65,0.1)]">
-            <div className="bg-[#1a1a1a]/80 px-4 py-2 border-b border-gray-800 flex gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></div>
-            </div>
-            <div className="p-8 text-center">
-              <h2 className="text-xl md:text-2xl text-gray-200 mb-6 tracking-widest uppercase font-bold">
-                Terminal Initializing...
-              </h2>
-              <p className="text-gray-500 text-[10px] mb-10 leading-relaxed italic">
-                SYSTEM_MANIFEST.V1 : CORE ENGINE IS PROCESSING DATA VIA LOCAL DOCKER NODES. PUBLIC UI RESTRICTED.
-              </p>
-              
-              <div className="flex flex-col gap-3">
-                <div className="px-4 py-3 border border-green-900/40 rounded bg-green-950/5 text-green-500 text-[10px] font-bold">
-                  [OK] BACKEND ENGINE ONLINE
-                </div>
-                <div className="px-4 py-3 border border-gray-800 rounded bg-[#0a0a0a]/50 text-gray-500 text-[10px] animate-pulse">
-                  [WAIT] DASHBOARD COMING SOON...
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <footer className="mt-auto pt-10 flex justify-center gap-10 text-[10px] text-gray-600 tracking-widest">
-          <span>STACK: NEXT.JS • THREE.JS • DOCKER • N8N</span>
-        </footer>
-      </div>
-    </main>
+  gsap.fromTo(section,
+    { opacity: 0, y: 80, scale: 0.97 },
+    {
+      opacity: 1, y: 0, scale: 1,
+      duration: 1.1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 85%',
+        toggleActions: 'play none none reverse'
+      }
+    }
   );
+});
+
+gsap.utils.toArray('.card').forEach((card, i) => {
+  gsap.fromTo(card,
+    { opacity: 0, y: 60, rotateX: 15 },
+    {
+      opacity: 1, y: 0, rotateX: 0,
+      duration: 0.8,
+      delay: i * 0.1,
+      ease: 'back.out(1.4)',
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 90%',
+        toggleActions: 'play none none reverse'
+      }
+    }
+  );
+
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    gsap.to(card, {
+      rotateY: x * 15,
+      rotateX: -y * 15,
+      scale: 1.04,
+      duration: 0.3,
+      ease: 'power2.out',
+      transformPerspective: 800
+    });
+  });
+
+  card.addEventListener('mouseleave', () => {
+    gsap.to(card, {
+      rotateY: 0, rotateX: 0, scale: 1,
+      duration: 0.5, ease: 'elastic.out(1, 0.5)'
+    });
+  });
+});
+
+const heroTitle = document.getElementById('hero-title');
+if (heroTitle) {
+  const text = heroTitle.dataset.text || heroTitle.innerText;
+  heroTitle.innerHTML = '';
+  let i = 0;
+  const type = () => {
+    if (i < text.length) {
+      heroTitle.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(type, 60);
+    } else {
+      setInterval(() => {
+        heroTitle.style.textShadow = `
+          ${Math.random()*6-3}px 0 #00ffb4,
+          ${Math.random()*6-3}px 0 #ff00aa
+        `;
+        setTimeout(() => {
+          heroTitle.style.textShadow = '0 0 30px rgba(0,255,180,0.5)';
+        }, 100);
+      }, 3000);
+    }
+  };
+  type();
 }
+
+document.querySelectorAll('.counter').forEach(el => {
+  const target = parseInt(el.dataset.target || el.innerText);
+  const obj = { val: 0 };
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      gsap.to(obj, {
+        val: target,
+        duration: 2,
+        ease: 'power2.out',
+        onUpdate: () => {
+          el.innerText = Math.floor(obj.val).toLocaleString();
+        }
+      });
+    }
+  });
+});
+
+const navbar = document.getElementById('navbar');
+if (navbar) {
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const current = window.scrollY;
+    if (current > lastScroll && current > 100) {
+      gsap.to(navbar, { y: -80, duration: 0.4, ease: 'power2.in' });
+    } else {
+      gsap.to(navbar, { y: 0, duration: 0.4, ease: 'power2.out' });
+    }
+    navbar.style.backdropFilter = current > 50 ? 'blur(20px)' : 'blur(0px)';
+    navbar.style.background = current > 50 ? 'rgba(5,5,15,0.85)' : 'transparent';
+    lastScroll = current;
+  });
+}
+
+const ticker = document.getElementById('ticker');
+if (ticker) {
+  const items = [
+    '🚀 BTC +4.2%', '📈 ETH trending', '🔥 Pakistan Crypto Update',
+    '⚡ Google Trends: AI Tools', '💰 Top Deals Live', '📊 Binance Volume High'
+  ];
+  let idx = 0;
+  setInterval(() => {
+    gsap.to(ticker, {
+      opacity: 0, y: -10, duration: 0.3,
+      onComplete: () => {
+        ticker.innerText = items[idx % items.length];
+        idx++;
+        gsap.to(ticker, { opacity: 1, y: 0, duration: 0.3 });
+      }
+    });
+  }, 2500);
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      gsap.to(window, {
+        scrollTo: { y: target, offsetY: 60 },
+        duration: 1.2,
+        ease: 'power3.inOut'
+      });
+    }
+  });
+});
+
+const cursor = document.createElement('div');
+cursor.id = 'glow-cursor';
+cursor.style.cssText = `
+  position: fixed; width: 20px; height: 20px;
+  border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(0,255,180,0.8), transparent);
+  z-index: 9999; transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s;
+  mix-blend-mode: screen;
+`;
+document.body.appendChild(cursor);
+
+document.addEventListener('mousemove', e => {
+  gsap.to(cursor, {
+    x: e.clientX, y: e.clientY,
+    duration: 0.15, ease: 'power2.out'
+  });
+});
+
+document.querySelectorAll('a, button, .card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '40px';
+    cursor.style.height = '40px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '20px';
+    cursor.style.height = '20px';
+  });
+});
