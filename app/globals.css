@@ -1,17 +1,43 @@
-/* Force text to stay on top of canvas */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --g: #00ffb4;
+}
+
+body {
+  background: #04040c !important;
+  color: #ffffff !important;
+  font-family: 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Force Text Visibility */
 .scene {
   position: relative !important;
   z-index: 10 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
 }
 
-.welcome-title, .scene-heading {
+h1, h2, p {
   color: #ffffff !important;
   opacity: 1 !important;
   visibility: visible !important;
-  display: block !important;
+  position: relative !important;
+  z-index: 20 !important;
 }
 
 canvas {
   position: fixed !important;
-  z-index: -1 !important; /* Hamesha sab se peeche */
+  top: 0;
+  left: 0;
+  z-index: -1 !important; /* Hamesha peeche */
+  pointer-events: none;
 }
