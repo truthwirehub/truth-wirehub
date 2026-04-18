@@ -86,29 +86,18 @@ export default function Home() {
 
       <div className="relative z-10 w-full">
 
-        {/* SECTION 1: THE NEXUS (No Animation on Text - Always Visible) */}
+        {/* SECTION 1: THE NEXUS */}
         <section className="h-screen flex flex-col justify-center items-center text-center px-6 relative">
           {stickers1.map((s, i) => (
             <FloatingSticker key={i} emoji={s.emoji} style={s.style} visible={true} />
           ))}
-
           <div className="mb-12">
-            <p className="text-[10px] tracking-[15px] uppercase text-[#00ffb4] font-bold animate-pulse">
-              System Online // 2026
-            </p>
+            <p className="text-[10px] tracking-[15px] uppercase text-[#00ffb4] font-bold animate-pulse">System Online // 2026</p>
           </div>
-
           <h1 className="text-7xl md:text-[10rem] font-black leading-none tracking-tighter italic text-white drop-shadow-[0_0_30px_rgba(0,255,180,0.3)]">
-            TRUTH <br />
-            <span className="text-[#00ffb4]">
-              WIREHUB
-            </span>
+            TRUTH <br /><span className="text-[#00ffb4]">WIREHUB</span>
           </h1>
-
-          <p className="mt-12 text-gray-300 tracking-[0.5em] uppercase text-[10px] font-medium">
-            Intelligence Nexus // Global Data Flow
-          </p>
-
+          <p className="mt-12 text-gray-300 tracking-[0.5em] uppercase text-[10px] font-medium">Intelligence Nexus // Global Data Flow</p>
           <div className="mt-20 animate-bounce text-[#00ffb4] text-4xl">↓</div>
         </section>
 
@@ -121,4 +110,48 @@ export default function Home() {
           <h2 className={`text-5xl md:text-8xl font-black italic text-center mb-8 text-white transition-all duration-1000 delay-200 ${vis2 ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-16'}`}>
             QUANTUM <br /><span className="text-gray-500">INTELLIGENCE</span>
           </h2>
-          <p className={
+          <p className={`text-xl md:text-2xl text-gray-300 max-w-4xl text-center font-light transition-all duration-1000 delay-400 ${vis2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            Scanning the internet's pulse. We distill raw data into <span className="text-white font-semibold underline decoration-[#00ffb4]">Pure Intelligence</span>. Markets, Culture, and Power—unfiltered.
+          </p>
+        </section>
+
+        {/* SECTION 3: OPPORTUNITY */}
+        <section ref={ref3} className="min-h-screen flex flex-col justify-center items-center px-6 relative">
+          {stickers3.map((s, i) => (
+            <FloatingSticker key={i} emoji={s.emoji} style={s.style} visible={vis3} />
+          ))}
+          <div className={`mb-16 text-9xl text-blue-500/20 animate-pulse transition-all duration-1000 ${vis3 ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}>⨳</div>
+          <h2 className={`text-5xl md:text-8xl font-black italic text-center mb-8 text-blue-400 transition-all duration-1000 delay-200 ${vis3 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-16'}`}>
+            ELITE <br /> DISCOVERY
+          </h2>
+          <p className={`text-xl md:text-2xl text-gray-300 max-w-4xl text-center font-light transition-all duration-1000 delay-400 ${vis3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            When the world moves, we find the <span className="text-white">Value</span>. Real-time trends matched with premium opportunities.
+          </p>
+        </section>
+
+        {/* SECTION 4: THE BIG REVEAL */}
+        <section ref={ref4} className="h-screen flex flex-col justify-center items-center text-center px-6 bg-gradient-to-b from-transparent to-[#00ffb4]/10 relative">
+          {stickers4.map((s, i) => (
+            <FloatingSticker key={i} emoji={s.emoji} style={s.style} visible={vis4} />
+          ))}
+          <h2 className={`text-7xl md:text-[9rem] font-black italic tracking-tighter leading-none text-white transition-all duration-1000 ${vis4 ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+            SOMETHING <br /> BIG IS <br /><span className="text-[#00ffb4]">COMING</span>
+          </h2>
+          <div className={`mt-16 space-y-4 transition-all duration-1000 delay-500 ${vis4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <p className="text-[#00ffb4] font-bold tracking-[1.5em] text-[10px] uppercase animate-pulse">Wait for the signal</p>
+            <div className="w-48 h-[1px] bg-gradient-to-r from-transparent via-[#00ffb4] to-transparent mx-auto" />
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <footer className="py-20 text-center border-t border-white/5">
+          <p className="text-[10px] tracking-[2em] text-gray-600 uppercase">
+            Truth Wirehub &copy; 2026 // Authorized Access Only
+          </p>
+        </footer>
+
+      </div>
+    </main>
+  )
+}
+// END OF FILE (Yahan tak lazmi copy karein)
