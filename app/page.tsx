@@ -13,12 +13,13 @@ export default function Home() {
       fontFamily: 'sans-serif',
       textAlign: 'center'
     }}>
-      <h1 style={{ fontSize: '8vw', fontWeight: '900', margin: 0 }}>
+      <h1 style={{ fontSize: '10vw', fontWeight: '900', margin: 0, letterSpacing: '-2px' }}>
         TRUTH <span style={{ color: '#00ffb4' }}>WIREHUB</span>
       </h1>
       <p style={{ color: '#555', marginTop: '20px', fontSize: '1.2rem', letterSpacing: '5px', textTransform: 'uppercase' }}>
         Something Big is Coming
       </p>
+      <div style={{ marginTop: '40px', width: '40px', height: '2px', backgroundColor: '#00ffb4' }}></div>
     </main>
   )
 }
