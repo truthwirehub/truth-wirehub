@@ -1,8 +1,15 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 
+// Vercel ko chup karwane ke liye Types
+interface FloatingStickerProps {
+  emoji: string;
+  style: React.CSSProperties;
+  visible: boolean;
+}
+
 // Floating sticker component
-function FloatingSticker({ emoji, style, visible }) {
+function FloatingSticker({ emoji, style, visible }: FloatingStickerProps) {
   return (
     <span
       className={`absolute text-4xl md:text-6xl select-none pointer-events-none transition-all duration-700 ${
@@ -17,7 +24,7 @@ function FloatingSticker({ emoji, style, visible }) {
 
 // Scroll-reveal section hook
 function useScrollReveal() {
-  const ref = useRef(null)
+  const ref = useRef<any>(null)
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -29,7 +36,7 @@ function useScrollReveal() {
     return () => observer.disconnect()
   }, [])
 
-  return [ref, visible]
+  return [ref, visible] as [any, boolean]
 }
 
 export default function Home() {
@@ -238,3 +245,4 @@ export default function Home() {
     </main>
   )
 }
+// END OF FILE
