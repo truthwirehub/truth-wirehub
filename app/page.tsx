@@ -117,7 +117,7 @@ export default function Home() {
           }
         }
 
-        // HERO TYPEWRITER (FIXED SPACING BUG)
+        // HERO TYPEWRITER
         const sub = document.getElementById('welcome-sub')
         if (sub) {
           const subText = "Every trend. Every story. Every deal — extracted from the global pulse, in real time, just for you."
@@ -203,10 +203,16 @@ export default function Home() {
         #scene-tech { text-align: left; padding-left: max(60px, 10vw); }
         .scene-label { font-size: 0.65rem; letter-spacing: 6px; text-transform: uppercase; color: var(--g); margin-bottom: 24px; opacity: 0.7; }
         .scene-heading { font-size: clamp(3rem, 7vw, 7rem); font-weight: 900; line-height: 0.95; letter-spacing: -3px; margin-bottom: 40px; }
-        .scene-heading .muted { color: rgba(255,255,255,0.12); display: block; }
+        
+        /* FIX APPLIED HERE: Made 'Intelligence' text much brighter */
+        .scene-heading .muted { color: rgba(255,255,255,0.45); display: block; } 
+        
         .scene-body { font-size: clamp(1rem, 1.8vw, 1.25rem); color: rgba(255,255,255,0.35); line-height: 1.8; max-width: 560px; font-weight: 300; }
         .scene-body strong { color: rgba(255,255,255,0.75); font-weight: 600; }
-        .big-number { position: absolute; right: 8vw; font-size: clamp(8rem, 18vw, 18rem); font-weight: 900; color: rgba(255,255,255,0.025); letter-spacing: -10px; pointer-events: none; line-height: 1; top: 50%; transform: translateY(-50%); }
+        
+        /* FIX APPLIED HERE: Made '02' number much brighter */
+        .big-number { position: absolute; right: 8vw; font-size: clamp(8rem, 18vw, 18rem); font-weight: 900; color: rgba(255,255,255,0.08); letter-spacing: -10px; pointer-events: none; line-height: 1; top: 50%; transform: translateY(-50%); }
+        
         #scene-news { text-align: right; align-items: flex-end; padding-right: max(60px, 10vw); }
         #scene-deals { text-align: center; }
         .deals-tagline { font-size: clamp(3rem, 7vw, 7rem); font-weight: 900; letter-spacing: -3px; line-height: 0.95; margin-bottom: 40px; }
@@ -282,7 +288,7 @@ export default function Home() {
       {/* SCENE 4 — DEALS */}
       <section className="scene" id="scene-deals">
         <div className="glow-orb" style={{ width: '600px', height: '400px', background: '#ffcc00', top: '20%', left: '50%', transform: 'translateX(-50%)' }}></div>
-        <div className="big-number" style={{ opacity: 0.02 }}>04</div>
+        <div className="big-number" style={{ opacity: 0.08 }}>04</div>
         <p className="scene-label" style={{ color: '#ffcc00' }}>Best Deals</p>
         <h2 className="deals-tagline">
           When Trends
