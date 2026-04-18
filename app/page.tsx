@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div style={{ 
+    <main style={{ 
       backgroundColor: '#04040c', 
       color: 'white', 
       height: '100vh', 
@@ -10,20 +10,15 @@ export default function Home() {
       alignItems: 'center', 
       justifyContent: 'center',
       margin: 0,
-      fontFamily: 'sans-serif'
+      fontFamily: 'sans-serif',
+      textAlign: 'center'
     }}>
-      <h1 style={{ fontSize: '10vw', fontWeight: '900', margin: 0, letterSpacing: '-2px' }}>
+      <h1 style={{ fontSize: '8vw', fontWeight: '900', margin: 0 }}>
         TRUTH <span style={{ color: '#00ffb4' }}>WIREHUB</span>
       </h1>
-      <p style={{ color: '#555', marginTop: '20px', fontSize: '1.5rem', letterSpacing: '5px', textTransform: 'uppercase' }}>
+      <p style={{ color: '#555', marginTop: '20px', fontSize: '1.2rem', letterSpacing: '5px', textTransform: 'uppercase' }}>
         Something Big is Coming
       </p>
-      <div style={{ 
-        marginTop: '50px', 
-        width: '50px', 
-        height: '2px', 
-        backgroundColor: '#00ffb4' 
-      }}></div>
-    </div>
+    </main>
   )
 }
