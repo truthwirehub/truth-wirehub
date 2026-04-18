@@ -83,7 +83,10 @@ function BgCanvas() {
       animId = requestAnimationFrame(draw)
     }
     draw()
-    return () => cancelAnimationFrame(animId)
+    return () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener('resize', resize)
+    }
   }, [])
 
   return (
@@ -105,8 +108,8 @@ export default function Home() {
     const ring = ringRef.current!
 
     const onMove = (e: MouseEvent) => {
-      gsap.to(cur, { x: e.clientX, y: e.clientY, duration: 0.08 })
-      gsap.to(ring, { x: e.clientX, y: e.clientY, duration: 0.25 })
+      gsap.to(cur, { x: e.clientX, y: e.clientY, duration: 0.1, ease: 'power2.out' })
+      gsap.to(ring, { x: e.clientX, y: e.clientY, duration: 0.3, ease: 'power2.out' })
     }
     document.addEventListener('mousemove', onMove)
 
@@ -119,17 +122,59 @@ export default function Home() {
       if (i < text.length) { el.innerText += text[i++]; setTimeout(type, 25) }
     }, 1200)
 
-    // Animations
-    gsap.from('.welcome-title', { opacity: 0, y: 60, duration: 1.2, delay: 0.4, ease: 'power4.out' })
-    gsap.from('.welcome-eyebrow', { opacity: 0, y: 20, duration: 1.2, delay: 0.2, ease: 'power3.out' })
+    // Hero Entrance
+    gsap.from('.welcome-title', { opacity: 0, y: 100, duration: 1.5, delay: 0.4, ease: 'power4.out' })
+    gsap.from('.welcome-eyebrow', { opacity: 0, y: 30, duration: 1.2, delay: 0.2, ease: 'power3.out' })
 
-    document.querySelectorAll('.scene:not(#scene-welcome)').forEach(scene => {
-      const heading = scene.querySelector('.scene-heading, .deals-tagline')
-      const body = scene.querySelector('.scene-body')
-      const label = scene.querySelector('.scene-label')
+    // Scene reveals & Parallax
+    document.querySelectorAll('.scene').forEach((scene) => {
+      const heading = scene.querySelector('.scene-heading, .deals-tagline, .welcome-title')
+      const body = scene.querySelector('.scene-body, .welcome-sub')
+      const label = scene.querySelector('.scene-label, .welcome-eyebrow')
+      const bigNum = scene.querySelector('.big-number')
+
+      // Fade-in reveals
       if (label) gsap.from(label, { opacity: 0, x: -30, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: scene, start: 'top 75%' } })
       if (heading) gsap.from(heading, { opacity: 0, y: 80, duration: 1.2, ease: 'power4.out', scrollTrigger: { trigger: scene, start: 'top 70%' } })
-      if (body) gsap.from(body, { opacity: 0, y: 40, duration: 1.2, delay: 0.2, ease: 'power3.out', scrollTrigger: { trigger: scene, start: 'top 68%' } })
+      
+      // Parallax effect: Headings move slower than scroll
+      if (heading) {
+        gsap.to(heading, {
+          y: -100,
+          scrollTrigger: {
+            trigger: scene,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1
+          }
+        })
+      }
+
+      if (bigNum) {
+        gsap.to(bigNum, {
+          y: -150,
+          scrollTrigger: {
+            trigger: scene,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5
+          }
+        })
+      }
+    })
+
+    // Floating Words Interaction
+    document.querySelectorAll('.float-word').forEach((word, index) => {
+      gsap.to(word, {
+        y: index % 2 === 0 ? -100 : 100,
+        rotation: index % 2 === 0 ? 15 : -15,
+        scrollTrigger: {
+          trigger: '#scene-welcome',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1
+        }
+      })
     })
 
     // Background color shift
@@ -168,7 +213,7 @@ export default function Home() {
           <br />
           <span style={{ background: 'linear-gradient(90deg,var(--g),var(--b))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'block' }}>WIREHUB</span>
         </h1>
-        <p ref={subRef} style={{ marginTop: 40, fontSize: 'clamp(1rem,2vw,1.3rem)', color: 'rgba(255,255,255,0.28)', letterSpacing: 1, lineHeight: 1.7, maxWidth: 600, fontWeight: 300, position: 'relative' }} />
+        <p ref={subRef} className="welcome-sub" style={{ marginTop: 40, fontSize: 'clamp(1rem,2vw,1.3rem)', color: 'rgba(255,255,255,0.28)', letterSpacing: 1, lineHeight: 1.7, maxWidth: 600, fontWeight: 300, position: 'relative', marginInline: 'auto' }} />
         <div style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, color: 'rgba(255,255,255,0.18)', fontSize: '0.6rem', letterSpacing: 4, textTransform: 'uppercase' }}>
           <div className="scroll-line" />
           scroll
@@ -182,7 +227,7 @@ export default function Home() {
         <div className="big-number">02</div>
         <p className="scene-label">Technology</p>
         <h2 className="scene-heading">The World&apos;s<span className="muted">Intelligence</span>Engine</h2>
-        <p className="scene-body">We scan the internet so you don&apos;t have to. <strong>Markets, geopolitics, and culture</strong> analyzed and delivered as clean, actionable intelligence.</p>
+        <p className="scene-body">We scan the internet so you don&apos;t have to. <strong>Markets, geopolitics, and culture</strong> analyzed and delivered as clean, actionable intelligence. No noise. No delay.</p>
         <div className="scene-rule" />
       </section>
 
