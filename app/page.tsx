@@ -1,15 +1,8 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 
-// ✅ TYPESCRIPT FIX: Vercel ko batane ke liye ke inka Type kya hai
-interface FloatingStickerProps {
-  emoji: string;
-  style: React.CSSProperties;
-  visible: boolean;
-}
-
-// Floating sticker component
-function FloatingSticker({ emoji, style, visible }: FloatingStickerProps) {
+// Floating sticker component (Sirf yahan type define kiya hai taake Vercel error na de)
+function FloatingSticker({ emoji, style, visible }: { emoji: string, style: React.CSSProperties, visible: boolean }) {
   return (
     <span
       className={`absolute text-4xl md:text-6xl select-none pointer-events-none transition-all duration-700 ${
@@ -24,7 +17,7 @@ function FloatingSticker({ emoji, style, visible }: FloatingStickerProps) {
 
 // Scroll-reveal section hook
 function useScrollReveal() {
-  const ref = useRef<any>(null)
+  const ref = useRef<any>(null) // Yahan <any> lagaya hai strict mode ke liye
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -36,7 +29,7 @@ function useScrollReveal() {
     return () => observer.disconnect()
   }, [])
 
-  return [ref, visible] as const
+  return [ref, visible] as [any, boolean] // TypeScript ko batane ke liye
 }
 
 export default function Home() {
