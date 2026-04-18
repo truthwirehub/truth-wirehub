@@ -7,9 +7,7 @@ export default function Home() {
       
       {/* 1. ATMOSPHERIC BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        {/* Animated Grid */}
         <div className="absolute inset-0 bg-[radial-gradient(#00ffb4_1px,transparent_1px)] [background-size:40px_40px] opacity-10" />
-        {/* Moving Glow Orbs */}
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-green-500/10 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full animate-pulse [animation-delay:2s]" />
       </div>
@@ -33,14 +31,14 @@ export default function Home() {
           <div className="mt-20 animate-bounce text-green-500/30 text-4xl">↓</div>
         </section>
 
-        {/* SECTION 2: THE ENGINE (Floating Icon) */}
+        {/* SECTION 2: THE ENGINE */}
         <section className="min-h-screen flex flex-col justify-center items-center px-6 bg-black/40 backdrop-blur-sm border-y border-white/5">
           <div className="mb-16 text-9xl text-green-500/10 animate-spin [animation-duration:15s]">⌬</div>
           <h2 className="text-5xl md:text-8xl font-black italic text-center mb-8">
             QUANTUM <br /> <span className="text-gray-800">INTELLIGENCE</span>
           </h2>
           <p className="text-xl md:text-3xl text-gray-400 max-w-4xl text-center font-light leading-relaxed">
-            Scanning the internet's pulse. We distill raw data into <span className="text-white font-semibold underline decoration-green-500">Pure Intelligence</span>. Markets, Culture, and Power—unfiltered.
+            Scanning the internet&apos;s pulse. We distill raw data into <span className="text-white font-semibold underline decoration-green-500">Pure Intelligence</span>. Markets, Culture, and Power—unfiltered.
           </p>
         </section>
 
@@ -69,4 +67,11 @@ export default function Home() {
         {/* FOOTER */}
         <footer className="py-20 text-center border-t border-white/5">
           <p className="text-[10px] tracking-[2em] text-gray-800 uppercase">
-            Truth Wirehub &copy; 202
+            Truth Wirehub &copy; 2026 // Authorized Access Only
+          </p>
+        </footer>
+
+      </div>
+    </main>
+  )
+}
