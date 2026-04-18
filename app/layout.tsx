@@ -2,7 +2,7 @@ import './globals.css'
 
 export const metadata = {
   title: 'Truth WireHub',
-  description: 'Intelligence Engine',
+  description: 'Intelligence Nexus',
 }
 
 export default function RootLayout({
@@ -12,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, padding: 0, backgroundColor: '#04040c' }}>
+      <body className="bg-[#04040c] m-0 p-0">
         {children}
       </body>
     </html>
