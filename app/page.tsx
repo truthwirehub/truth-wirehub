@@ -1,7 +1,40 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function Home() {
+  // NAYA: Data save karne ke liye state
+  const [reports, setReports] = useState<any[]>([])
+
+  // NAYA: Supabase se sirf AI Reports fetch karne wala function
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+        
+        if (!url || !key) {
+          console.log("Vercel env variables missing locally. Data will show on live site.");
+          return;
+        }
+
+        // Sirf ai_analysis aur date mangwa rahe hain, raw_json nahi!
+        const res = await fetch(`${url}/rest/v1/crypto_data?select=ai_analysis,date_recorded&order=id.desc&limit=3`, {
+          headers: {
+            'apikey': key,
+            'Authorization': `Bearer ${key}`
+          }
+        });
+        const data = await res.json();
+        if (data && data.length > 0) {
+          setReports(data);
+        }
+      } catch (e) {
+        console.error("Error fetching reports:", e);
+      }
+    };
+    fetchReports();
+  }, []);
+
   useEffect(() => {
     // Dynamically loading GSAP to bypass Vercel build errors
     const loadScript = (src: string) => {
@@ -165,7 +198,7 @@ export default function Home() {
           gsap.to(el, { y: (i % 2 === 0 ? -80 : 80), ease: 'none', scrollTrigger: { trigger: '#scene-welcome', start: 'top top', end: 'bottom top', scrub: 1 + i * 0.3 } })
         })
 
-        const bgColors = ['#04040c', '#02080f', '#0a0208', '#07060a', '#04040c']
+        const bgColors = ['#04040c', '#02080f', '#0a0208', '#07060a', '#04040c', '#04040c']
         scenes.forEach((scene, i) => {
           ScrollTrigger.create({
             trigger: scene,
@@ -203,16 +236,10 @@ export default function Home() {
         #scene-tech { text-align: left; padding-left: max(60px, 10vw); }
         .scene-label { font-size: 0.65rem; letter-spacing: 6px; text-transform: uppercase; color: var(--g); margin-bottom: 24px; opacity: 0.7; }
         .scene-heading { font-size: clamp(3rem, 7vw, 7rem); font-weight: 900; line-height: 0.95; letter-spacing: -3px; margin-bottom: 40px; }
-        
-        /* FIX APPLIED HERE: Made 'Intelligence' text much brighter */
         .scene-heading .muted { color: rgba(255,255,255,0.45); display: block; } 
-        
         .scene-body { font-size: clamp(1rem, 1.8vw, 1.25rem); color: rgba(255,255,255,0.35); line-height: 1.8; max-width: 560px; font-weight: 300; }
         .scene-body strong { color: rgba(255,255,255,0.75); font-weight: 600; }
-        
-        /* FIX APPLIED HERE: Made '02' number much brighter */
         .big-number { position: absolute; right: 8vw; font-size: clamp(8rem, 18vw, 18rem); font-weight: 900; color: rgba(255,255,255,0.08); letter-spacing: -10px; pointer-events: none; line-height: 1; top: 50%; transform: translateY(-50%); }
-        
         #scene-news { text-align: right; align-items: flex-end; padding-right: max(60px, 10vw); }
         #scene-deals { text-align: center; }
         .deals-tagline { font-size: clamp(3rem, 7vw, 7rem); font-weight: 900; letter-spacing: -3px; line-height: 0.95; margin-bottom: 40px; }
@@ -220,6 +247,13 @@ export default function Home() {
         .scene-rule { position: absolute; bottom: 0; left: 10vw; right: 10vw; height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent); }
         .glow-orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; opacity: 0.12; }
         .float-word { position: absolute; font-size: clamp(0.55rem, 1vw, 0.7rem); letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.08); font-weight: 700; pointer-events: none; }
+        
+        /* NAYA: Reports Section Styling */
+        .report-card { background: rgba(255,255,255,0.02); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .report-content h3 { color: var(--g); font-size: 1.4rem; margin-top: 15px; margin-bottom: 10px; font-weight: 600; }
+        .report-content p { color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 15px; font-size: 1.1rem; }
+        .report-content ul { padding-left: 20px; color: rgba(255,255,255,0.6); margin-bottom: 15px; }
+        .report-content li { margin-bottom: 8px; line-height: 1.6; }
       `}} />
 
       <canvas id="bg-canvas"></canvas>
@@ -300,7 +334,31 @@ export default function Home() {
         <div className="scene-rule"></div>
       </section>
 
-      {/* SCENE 5 — FINALE (NEW) */}
+      {/* NAYA: SCENE 4.5 — LIVE REPORTS */}
+      <section className="scene" id="scene-reports" style={{ alignItems: 'flex-start', padding: '100px 10vw' }}>
+        <p className="scene-label" style={{ color: 'var(--b)' }}>Live Feed</p>
+        <h2 className="scene-heading" style={{ fontSize: 'clamp(2.5rem, 6vw, 6rem)', marginBottom: '40px' }}>
+          Latest <span className="muted">Briefings</span>
+        </h2>
+        
+        <div style={{ width: '100%', maxWidth: '900px' }}>
+          {reports.length === 0 ? (
+            <p style={{ color: 'rgba(255,255,255,0.4)' }}>Fetching latest intelligence from the wire...</p>
+          ) : (
+            reports.map((rep, idx) => (
+              <div key={idx} className="report-card">
+                <p style={{ color: 'var(--g)', fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px' }}>
+                  Recorded: {rep.date_recorded || 'Live Update'}
+                </p>
+                {/* Yahan par aapki AI ki banayi hui Report HTML format mein ayegi */}
+                <div className="report-content" dangerouslySetInnerHTML={{ __html: rep.ai_analysis }} />
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+
+      {/* SCENE 5 — FINALE */}
       <section className="scene" id="scene-finale" style={{ textAlign: 'center', minHeight: '100vh', justifyContent: 'center' }}>
         <div className="glow-orb" style={{ width: '600px', height: '600px', background: 'var(--g)', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', opacity: 0.08 }}></div>
         <h2 className="scene-heading" style={{ fontSize: 'clamp(4rem, 12vw, 12rem)', lineHeight: '0.85', margin: '0' }}>
@@ -312,8 +370,6 @@ export default function Home() {
           Stay on the wire // 2026
         </p>
       </section>
-
     </>
   )
 }
-// END OF FILE
