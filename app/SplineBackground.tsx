@@ -1,8 +1,9 @@
 'use client'
 import dynamic from 'next/dynamic'
 
-// 3D ko browser ke liye safe banaya
-const Spline = dynamic(() => import('@splinetool/react-spline'), { ssr: false })
+const Spline = dynamic(() => import('@splinetool/react-spline'), { 
+  ssr: false 
+})
 
 export default function SplineBackground() {
   return (
