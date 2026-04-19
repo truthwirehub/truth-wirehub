@@ -319,101 +319,64 @@ export default function Home() {
         <div className="scene-rule"></div>
       </section>
 
-      {/* SCENE 4 — DEALS */}
-      {/* NAYA: SCENE 4.5 — 3D ADVANCE LIVE REPORTS */}
-      <section className="scene" id="scene-reports" style={{ alignItems: 'flex-start', padding: '100px 10vw' }}>
-        <p className="scene-label" style={{ color: 'var(--b)' }}>Live Feed</p>
-        <h2 className="scene-heading" style={{ fontSize: 'clamp(2.5rem, 6vw, 6rem)', marginBottom: '40px' }}>
-          Latest <span className="muted">Briefings</span>
-        </h2>
-        
-        <div style={{ width: '100%', maxWidth: '900px' }}>
-          {reports.length === 0 ? (
-            <p style={{ color: 'rgba(255,255,255,0.4)' }}>Fetching latest intelligence from the wire...</p>
-          ) : (
-            /* YE LINE ZAROORI HAI: (rep, idx) define ho raha hai */
-            reports.slice(0, 3).map((rep, idx) => (
-              <div key={idx} className="report-card" style={{ 
-                position: 'relative',
-                border: '1px solid rgba(0, 255, 180, 0.2)', 
-                background: 'rgba(0, 255, 180, 0.03)',
-                backdropFilter: 'blur(10px)', 
-                padding: '30px', 
-                marginBottom: '40px',
-                borderRadius: '8px',
-                boxShadow: '0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 255, 180, 0.05)',
-                transform: 'perspective(1000px) rotateX(2deg)',
-                transition: 'all 0.4s ease'
-              }}
-              /* 3D Hover Effects */
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) translateY(-10px) scale(1.02)';
-                e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.8)';
-                e.currentTarget.style.boxShadow = '0 30px 60px rgba(0, 255, 180, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'perspective(1000px) rotateX(2deg)';
-                e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.2)';
-                e.currentTarget.style.boxShadow = '0 20px 50px rgba(0,0,0,0.5)';
-              }}
-              >
-                {/* Neon Scanline Animation */}
-                <div className="scan-line" style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '2px',
-                  background: 'linear-gradient(90deg, transparent, #00ffb4, transparent)',
-                  opacity: 0.5
-                }}></div>
+      {/* reports.slice(0, 3).map ke andar ka code update karein */}
+{reports.slice(0, 3).map((rep, idx) => (
+  <Link href="/sequence" key={idx} style={{ textDecoration: 'none', display: 'block' }}>
+    <div className="report-card" style={{ 
+      position: 'relative',
+      border: '1px solid rgba(0, 255, 180, 0.2)', 
+      background: 'rgba(0, 255, 180, 0.03)',
+      backdropFilter: 'blur(10px)', 
+      padding: '30px', 
+      marginBottom: '40px',
+      borderRadius: '8px',
+      boxShadow: '0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 255, 180, 0.05)',
+      transform: 'perspective(1000px) rotateX(2deg)',
+      transition: 'all 0.4s ease',
+      cursor: 'pointer' // Mouse pointer batayega ke ye poora clickable hai
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) translateY(-10px) scale(1.02)';
+      e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.8)';
+      e.currentTarget.style.boxShadow = '0 30px 60px rgba(0, 255, 180, 0.2)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = 'perspective(1000px) rotateX(2deg)';
+      e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.2)';
+      e.currentTarget.style.boxShadow = '0 20px 50px rgba(0,0,0,0.5)';
+    }}
+    >
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '2px',
+        background: 'linear-gradient(90deg, transparent, #00ffb4, transparent)',
+        animation: 'scan 3s linear infinite'
+      }}></div>
 
-                <p style={{ color: 'var(--g)', fontSize: '0.7rem', letterSpacing: '4px', textTransform: 'uppercase', opacity: 0.6 }}>
-                  SECURE_LINK // {rep.date_recorded ? new Date(rep.date_recorded).toLocaleTimeString() : 'LIVE'}
-                </p>
+      <p style={{ color: 'var(--g)', fontSize: '0.7rem', letterSpacing: '4px', textTransform: 'uppercase', opacity: 0.6 }}>
+        SECURE_LINK // {rep.date_recorded ? new Date(rep.date_recorded).toLocaleTimeString() : 'LIVE'}
+      </p>
 
-                <h3 style={{ fontSize: '1.6rem', color: '#fff', margin: '15px 0', fontWeight: '900', letterSpacing: '-1px' }}>
-                  ENCRYPTED_INTEL_STREAM
-                </h3>
+      <h3 style={{ fontSize: '1.6rem', color: '#fff', margin: '15px 0', fontWeight: '900', letterSpacing: '-1px' }}>
+        ENCRYPTED_INTEL_STREAM
+      </h3>
 
-                <Link href="/sequence" style={{
-                  display: 'inline-block',
-                  marginTop: '10px',
-                  color: '#00ffb4',
-                  fontSize: '0.7rem',
-                  textDecoration: 'none',
-                  border: '1px solid #00ffb4',
-                  padding: '10px 25px',
-                  letterSpacing: '2px',
-                  textTransform: 'uppercase',
-                  background: 'transparent',
-                  transition: '0.3s'
-                }}>
-                  ACCESS_SEQUENCE
-                </Link>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-
-      {/* Archive Button Section */}
-      <div style={{ paddingBottom: '120px', textAlign: 'center', position: 'relative', zIndex: 20 }}>
-        <Link href="/archive" style={{
-          padding: '18px 45px',
-          border: '1px solid var(--g)',
-          color: '#00ffb4',
-          textDecoration: 'none',
-          fontSize: '0.75rem',
-          letterSpacing: '4px',
-          textTransform: 'uppercase',
-          borderRadius: '2px',
-          background: 'rgba(0, 255, 180, 0.03)',
-          fontWeight: 'bold'
-        }}>
-          Database History Archive
-        </Link>
+      <div style={{
+        marginTop: '10px',
+        color: '#00ffb4',
+        fontSize: '0.7rem',
+        letterSpacing: '2px',
+        textTransform: 'uppercase',
+        opacity: 0.8
+      }}>
+        TAP_TO_DECRYPT_SEQUENCE →
       </div>
+    </div>
+  </Link>
+))}
       {/* NAYA: SCENE 4.5 — 3D ADVANCE LIVE REPORTS */}
       <section className="scene" id="scene-reports" style={{ alignItems: 'flex-start', padding: '100px 10vw' }}>
         <p className="scene-label" style={{ color: 'var(--b)' }}>Live Feed</p>
