@@ -4,19 +4,35 @@ import Link from 'next/link'
 
 export default function ArchivePage() {
   const [reports, setReports] = useState<any[]>([])
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchArchive = async () => {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-      const res = await fetch(`${url}/rest/v1/crypto_data?select=*&order=id.desc`, {
-        headers: { 'apikey': key!, 'Authorization': `Bearer ${key}` }
-      })
-      const data = await res.json()
-      setReports(data)
+      try {
+        const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        if (!url || !key) {
+          setError('Environment variables missing. Please check SUPABASE_URL and SUPABASE_ANON_KEY.')
+          return
+        }
+        const res = await fetch(`${url}/rest/v1/crypto_data?select=*&order=id.desc`, {
+          headers: { 'apikey': key!, 'Authorization': `Bearer ${key}` }
+        })
+        if (!res.ok) {
+          setError(`Failed to fetch data: ${res.status} ${res.statusText}`)
+          return
+        }
+        const data = await res.json()
+        setReports(data)
+      } catch (e) {
+        setError('Network error: Unable to connect to the server.')
+        console.error(e)
+      }
     }
     fetchArchive()
   }, [])
+
+  if (error) return <div style={{background:'#04040c', color:'#ff4444', height:'100vh', display:'flex', justifyContent:'center', alignItems:'center', fontFamily:'monospace', letterSpacing:'2px', flexDirection:'column'}}><div>ERROR: {error}</div><Link href="/" style={{color:'#00ffb4', marginTop:'20px'}}>← BACK_TO_TERMINAL</Link></div>
 
   return (
     <div style={{ background: '#04040c', minHeight: '100vh', padding: '60px 5vw', fontFamily: 'monospace' }}>
