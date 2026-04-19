@@ -1,5 +1,5 @@
 'use client'
-import React, { Suspense } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 
 const Spline = dynamic(() => import('@splinetool/react-spline'), { 
@@ -7,6 +7,15 @@ const Spline = dynamic(() => import('@splinetool/react-spline'), {
 })
 
 export default function SplineBackground() {
+  const [mounted, setMounted] = useState(false)
+
+  // 🚀 Yeh ensure karega ke 3D sirf browser mein load ho
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <div style={{ background: '#020205', width: '100vw', height: '100vh' }} />;
+
   return (
     <div style={{ 
       position: 'fixed', 
@@ -14,7 +23,7 @@ export default function SplineBackground() {
       left: 0, 
       width: '100vw', 
       height: '100vh', 
-      zIndex: -1, // Bilkul peeche
+      zIndex: -1, 
       backgroundColor: '#020205' 
     }}>
       <Suspense fallback={<div style={{ background: '#020205', width: '100%', height: '100%' }} />}>
