@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Spline from '@splinetool/react-spline'
 
 export default function SequencePage() {
   const [data, setData] = useState<any>(null)
@@ -21,7 +22,6 @@ export default function SequencePage() {
     fetchLatest()
   }, [])
 
-  // Google Font Import (Layout mein bhi dal sakte hain, yahan asani ke liye hai)
   useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@300;500&display=swap';
@@ -49,76 +49,47 @@ export default function SequencePage() {
   ]
 
   return (
-    <div style={{ 
-      background: 'radial-gradient(circle at center, #0a0a15 0%, #020205 100%)', 
-      minHeight: '100vh', color: '#fff', padding: '60px 5vw', 
-      fontFamily: '"JetBrains Mono", monospace',
-      overflowX: 'hidden'
-    }}>
-      {/* Background Scanlines Effect */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))', zIndex: 10, backgroundSize: '100% 2px, 3px 100%' }}></div>
-
-      <Link href="/" style={{ color: '#00ffb4', textDecoration: 'none', fontSize: '0.7rem', letterSpacing: '3px', border: '1px solid #00ffb4', padding: '5px 15px', textShadow: '0 0 5px #00ffb4' }}>← RET_TERMINAL</Link>
+    <div style={{ position: 'relative', minHeight: '100vh', backgroundColor: '#020205', color: '#fff', overflowX: 'hidden', fontFamily: '"JetBrains Mono", monospace' }}>
       
-      <h1 style={{ 
-        fontFamily: '"Orbitron", sans-serif', fontSize: 'clamp(2rem, 10vw, 6rem)', 
-        fontWeight: '900', margin: '40px 0', textTransform: 'uppercase', 
-        letterSpacing: '-2px', lineHeight: '0.9' 
-      }}>
-        INTEL <span style={{ color: 'transparent', WebkitTextStroke: '1px rgba(255,255,255,0.2)' }}>SEQUENCE</span>
-      </h1>
+      {/* 🌟 3D SPLINE BACKGROUND LAYER 🌟 */}
+      {/* Agar screen black ho, to niche wali line mein apna .splinecode wala link paste kar dena */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 0 }}>
+        <Spline scene="https://prod.spline.design/53quz3hlIk7klVEdAfdY3RgZ/scene.splinecode" />
+      </div>
+      {/* Dark overlay taake text clearly nazar aaye */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 1, background: 'radial-gradient(circle at center, transparent 0%, #020205 100%)', pointerEvents: 'none', opacity: 0.8 }}></div>
 
-      <div style={{ position: 'relative', maxWidth: '1100px', margin: '0 auto', padding: '40px 0' }}>
-        {/* Center Line with Glow */}
-        <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, transparent, #00ffb4, transparent)', transform: 'translateX(-50%)', opacity: 0.2, boxShadow: '0 0 15px #00ffb4' }}></div>
+      {/* 🌟 FOREGROUND LAYER (Terminal UI) 🌟 */}
+      <div style={{ position: 'relative', zIndex: 10, padding: '60px 5vw' }}>
+        <Link href="/" style={{ color: '#00ffb4', textDecoration: 'none', fontSize: '0.7rem', letterSpacing: '3px', border: '1px solid #00ffb4', padding: '5px 15px', textShadow: '0 0 5px #00ffb4', backgroundColor: 'rgba(0,0,0,0.5)' }}>← RET_TERMINAL</Link>
+        
+        <h1 style={{ fontFamily: '"Orbitron", sans-serif', fontSize: 'clamp(2rem, 10vw, 6rem)', fontWeight: '900', margin: '40px 0', textTransform: 'uppercase', letterSpacing: '-2px', lineHeight: '0.9', color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.3)' }}>
+          INTEL <span style={{ color: 'transparent', WebkitTextStroke: '1px rgba(255,255,255,0.4)' }}>SEQUENCE</span>
+        </h1>
 
-        {sections.map((sec) => (
-          <div key={sec.id} onClick={() => setActiveBox(activeBox === sec.id ? null : sec.id)}
-               style={{ display: 'flex', justifyContent: sec.align === 'left' ? 'flex-start' : 'flex-end', marginBottom: '80px', width: '100%', cursor: 'pointer' }}>
-            <div style={{ 
-              width: '48%', padding: '35px', 
-              background: activeBox === sec.id ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.3)', 
-              border: `1px solid ${activeBox === sec.id ? sec.color : 'rgba(255,255,255,0.1)'}`, 
-              borderRadius: '0px', transition: 'all 0.5s cubic-bezier(0.19, 1, 0.22, 1)',
-              boxShadow: activeBox === sec.id ? `0 0 40px ${sec.color}22` : 'none',
-              backdropFilter: 'blur(10px)',
-              position: 'relative'
-            }}>
-              {/* Corner Accents */}
-              <div style={{ position: 'absolute', top: '-1px', left: '-1px', width: '20px', height: '2px', background: sec.color, display: activeBox === sec.id ? 'block' : 'none' }}></div>
-              <div style={{ position: 'absolute', top: '-1px', left: '-1px', width: '2px', height: '20px', background: sec.color, display: activeBox === sec.id ? 'block' : 'none' }}></div>
+        <div style={{ position: 'relative', maxWidth: '1100px', margin: '0 auto', padding: '40px 0' }}>
+          <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', background: 'linear-gradient(to bottom, transparent, #00ffb4, transparent)', transform: 'translateX(-50%)', opacity: 0.3, boxShadow: '0 0 10px #00ffb4' }}></div>
 
-              <h3 style={{ 
-                fontFamily: '"Orbitron", sans-serif', color: sec.color, 
-                fontSize: '0.75rem', letterSpacing: '2px', margin: 0,
-                textShadow: activeBox === sec.id ? `0 0 10px ${sec.color}` : 'none'
-              }}>
-                {sec.title} 
-              </h3>
-              
-              <div style={{ marginTop: '25px', display: activeBox === sec.id ? 'block' : 'none' }}>
-                <div style={{ 
-                  fontSize: '0.85rem', lineHeight: '2', color: 'rgba(255,255,255,0.8)', 
-                  marginBottom: '30px', textAlign: 'justify', borderLeft: `2px solid ${sec.color}`, paddingLeft: '15px' 
-                }} 
-                     dangerouslySetInnerHTML={{ __html: sec.content || "NO_DATA_POCKET_FOUND" }} />
+          {sections.map((sec) => (
+            <div key={sec.id} onClick={() => setActiveBox(activeBox === sec.id ? null : sec.id)} style={{ display: 'flex', justifyContent: sec.align === 'left' ? 'flex-start' : 'flex-end', marginBottom: '80px', width: '100%', cursor: 'pointer' }}>
+              <div style={{ width: '48%', padding: '35px', background: activeBox === sec.id ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.4)', border: `1px solid ${activeBox === sec.id ? sec.color : 'rgba(255,255,255,0.1)'}`, transition: 'all 0.5s ease', boxShadow: activeBox === sec.id ? `0 0 30px ${sec.color}33` : 'none', backdropFilter: 'blur(5px)', position: 'relative' }}>
                 
-                <Link href={`/article/${data.id}`} style={{
-                  display: 'block', textAlign: 'center',
-                  background: sec.color, color: '#000',
-                  padding: '12px', textDecoration: 'none',
-                  fontSize: '0.7rem', letterSpacing: '4px', fontWeight: '900',
-                  fontFamily: '"Orbitron", sans-serif',
-                  clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' // Futuristic shape
-                }}>
-                  ACCESS_DOSSIER_ →
-                </Link>
+                <h3 style={{ fontFamily: '"Orbitron", sans-serif', color: sec.color, fontSize: '0.75rem', letterSpacing: '2px', margin: 0, textShadow: activeBox === sec.id ? `0 0 10px ${sec.color}` : 'none' }}>
+                  {sec.title} 
+                </h3>
+                
+                <div style={{ marginTop: '25px', display: activeBox === sec.id ? 'block' : 'none' }}>
+                  <div style={{ fontSize: '0.85rem', lineHeight: '2', color: 'rgba(255,255,255,0.9)', marginBottom: '30px', textAlign: 'justify', borderLeft: `2px solid ${sec.color}`, paddingLeft: '15px' }} dangerouslySetInnerHTML={{ __html: sec.content || "NO_DATA_POCKET_FOUND" }} />
+                  
+                  <Link href={`/article/${data.id}`} style={{ display: 'block', textAlign: 'center', background: sec.color, color: '#000', padding: '12px', textDecoration: 'none', fontSize: '0.7rem', letterSpacing: '4px', fontWeight: '900', fontFamily: '"Orbitron", sans-serif', clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' }}>
+                    ACCESS_DOSSIER_ →
+                  </Link>
+                </div>
+                {!activeBox && <div style={{marginTop:'20px', color:sec.color, fontSize:'0.55rem', opacity:0.6, letterSpacing:'3px'}}>STATUS: ENCRYPTED_STREAMS</div>}
               </div>
-              
-              {!activeBox && <div style={{marginTop:'20px', color:sec.color, fontSize:'0.55rem', opacity:0.5, letterSpacing:'3px'}}>STATUS: ENCRYPTED_STREAMS</div>}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   )
