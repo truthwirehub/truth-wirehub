@@ -320,90 +320,100 @@ export default function Home() {
       </section>
 
       {/* SCENE 4 — DEALS */}
-      <section className="scene" id="scene-deals">
-        <div className="glow-orb" style={{ width: '600px', height: '400px', background: '#ffcc00', top: '20%', left: '50%', transform: 'translateX(-50%)' }}></div>
-        <div className="big-number" style={{ opacity: 0.08 }}>04</div>
-        <p className="scene-label" style={{ color: '#ffcc00' }}>Best Deals</p>
-        <h2 className="deals-tagline">
-          When Trends
-          <br />Move, <em>So Do Prices</em>
+      {/* NAYA: SCENE 4.5 — 3D ADVANCE LIVE REPORTS */}
+      <section className="scene" id="scene-reports" style={{ alignItems: 'flex-start', padding: '100px 10vw' }}>
+        <p className="scene-label" style={{ color: 'var(--b)' }}>Live Feed</p>
+        <h2 className="scene-heading" style={{ fontSize: 'clamp(2.5rem, 6vw, 6rem)', marginBottom: '40px' }}>
+          Latest <span className="muted">Briefings</span>
         </h2>
-        <p className="scene-body" style={{ textAlign: 'center', margin: '0 auto' }}>
-          The moment a product, app, or service enters the world's conversation, we surface the best offer for it. <strong>Trend-matched deals</strong>, curated in real time.
-        </p>
-        <div className="scene-rule"></div>
+        
+        <div style={{ width: '100%', maxWidth: '900px' }}>
+          {reports.length === 0 ? (
+            <p style={{ color: 'rgba(255,255,255,0.4)' }}>Fetching latest intelligence from the wire...</p>
+          ) : (
+            /* YE LINE ZAROORI HAI: (rep, idx) define ho raha hai */
+            reports.slice(0, 3).map((rep, idx) => (
+              <div key={idx} className="report-card" style={{ 
+                position: 'relative',
+                border: '1px solid rgba(0, 255, 180, 0.2)', 
+                background: 'rgba(0, 255, 180, 0.03)',
+                backdropFilter: 'blur(10px)', 
+                padding: '30px', 
+                marginBottom: '40px',
+                borderRadius: '8px',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 255, 180, 0.05)',
+                transform: 'perspective(1000px) rotateX(2deg)',
+                transition: 'all 0.4s ease'
+              }}
+              /* 3D Hover Effects */
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) translateY(-10px) scale(1.02)';
+                e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.8)';
+                e.currentTarget.style.boxShadow = '0 30px 60px rgba(0, 255, 180, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'perspective(1000px) rotateX(2deg)';
+                e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.2)';
+                e.currentTarget.style.boxShadow = '0 20px 50px rgba(0,0,0,0.5)';
+              }}
+              >
+                {/* Neon Scanline Animation */}
+                <div className="scan-line" style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '2px',
+                  background: 'linear-gradient(90deg, transparent, #00ffb4, transparent)',
+                  opacity: 0.5
+                }}></div>
+
+                <p style={{ color: 'var(--g)', fontSize: '0.7rem', letterSpacing: '4px', textTransform: 'uppercase', opacity: 0.6 }}>
+                  SECURE_LINK // {rep.date_recorded ? new Date(rep.date_recorded).toLocaleTimeString() : 'LIVE'}
+                </p>
+
+                <h3 style={{ fontSize: '1.6rem', color: '#fff', margin: '15px 0', fontWeight: '900', letterSpacing: '-1px' }}>
+                  ENCRYPTED_INTEL_STREAM
+                </h3>
+
+                <Link href="/sequence" style={{
+                  display: 'inline-block',
+                  marginTop: '10px',
+                  color: '#00ffb4',
+                  fontSize: '0.7rem',
+                  textDecoration: 'none',
+                  border: '1px solid #00ffb4',
+                  padding: '10px 25px',
+                  letterSpacing: '2px',
+                  textTransform: 'uppercase',
+                  background: 'transparent',
+                  transition: '0.3s'
+                }}>
+                  ACCESS_SEQUENCE
+                </Link>
+              </div>
+            ))
+          )}
+        </div>
       </section>
 
-    
-      <div key={idx} className="report-card" style={{ 
-  position: 'relative',
-  border: '1px solid rgba(0, 255, 180, 0.2)', 
-  background: 'rgba(0, 255, 180, 0.03)',
-  backdropFilter: 'blur(10px)', // Glass effect
-  padding: '30px', 
-  marginBottom: '40px',
-  borderRadius: '8px',
-  boxShadow: '0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 255, 180, 0.05)', // 3D Shadow
-  transform: 'perspective(1000px) rotateX(2deg)', // Subtle 3D Tilt
-  transition: 'all 0.4s ease'
-}}
-onMouseEnter={(e) => {
-  e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) translateY(-10px) scale(1.02)';
-  e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.8)';
-  e.currentTarget.style.boxShadow = '0 30px 60px rgba(0, 255, 180, 0.1)';
-}}
-onMouseLeave={(e) => {
-  e.currentTarget.style.transform = 'perspective(1000px) rotateX(2deg)';
-  e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.2)';
-  e.currentTarget.style.boxShadow = '0 20px 50px rgba(0,0,0,0.5)';
-}}
->
-  {/* Neon Scanline (Aik chalti hui roshni) */}
-  <div style={{
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '2px',
-    background: 'linear-gradient(90deg, transparent, #00ffb4, transparent)',
-    animation: 'scan 3s linear infinite'
-  }}></div>
-
-  <p style={{ color: 'var(--g)', fontSize: '0.7rem', letterSpacing: '4px', textTransform: 'uppercase', opacity: 0.6 }}>
-    SECURE_LINK // {new Date(rep.date_recorded).toLocaleTimeString()}
-  </p>
-
-  <h3 style={{ fontSize: '1.6rem', color: '#fff', margin: '15px 0', fontWeight: '900', letterSpacing: '-1px' }}>
-    ENCRYPTED_INTEL_STREAM
-  </h3>
-
-  <Link href="/sequence" style={{
-    display: 'inline-block',
-    marginTop: '10px',
-    color: '#00ffb4',
-    fontSize: '0.7rem',
-    textDecoration: 'none',
-    border: '1px solid #00ffb4',
-    padding: '10px 25px',
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-    background: 'transparent',
-    transition: '0.3s'
-  }}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.background = '#00ffb4';
-    e.currentTarget.style.color = '#000';
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.background = 'transparent';
-    e.currentTarget.style.color = '#00ffb4';
-  }}
-  >
-    ACCESS_SEQUENCE
-  </Link>
-</div>
-{/* SCENE 4 — DEALS (Upar wala as it is rehne dein) */}
-
+      {/* Archive Button Section */}
+      <div style={{ paddingBottom: '120px', textAlign: 'center', position: 'relative', zIndex: 20 }}>
+        <Link href="/archive" style={{
+          padding: '18px 45px',
+          border: '1px solid var(--g)',
+          color: '#00ffb4',
+          textDecoration: 'none',
+          fontSize: '0.75rem',
+          letterSpacing: '4px',
+          textTransform: 'uppercase',
+          borderRadius: '2px',
+          background: 'rgba(0, 255, 180, 0.03)',
+          fontWeight: 'bold'
+        }}>
+          Database History Archive
+        </Link>
+      </div>
       {/* NAYA: SCENE 4.5 — 3D ADVANCE LIVE REPORTS */}
       <section className="scene" id="scene-reports" style={{ alignItems: 'flex-start', padding: '100px 10vw' }}>
         <p className="scene-label" style={{ color: 'var(--b)' }}>Live Feed</p>
