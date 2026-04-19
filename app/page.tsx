@@ -1,208 +1,189 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
+// hooks/useAdvancedAnimations.ts
+'use client';
+import { useEffect } from 'react';
 
-export default function Home() {
-  const [reports, setReports] = useState<any[]>([])
-
-  // 1. DATA FETCHING (Latest 3)
+export const useAdvancedAnimations = (typewriterText?: string) => {
   useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-        if (!url || !key) return;
-        const res = await fetch(`${url}/rest/v1/crypto_data?select=ai_analysis,date_recorded&order=id.desc&limit=3`, {
-          headers: { 'apikey': key, 'Authorization': `Bearer ${key}` }
-        });
-        const data = await res.json();
-        if (data && data.length > 0) setReports(data);
-      } catch (e) { console.error("Fetch Error:", e); }
-    };
-    fetchReports();
-  }, []);
+    const loadScript = (src: string) =>
+      new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.onload = resolve;
+        document.body.appendChild(script);
+      });
 
-  // 2. FULL CINEMATIC ANIMATIONS (GSAP & CANVAS)
-  useEffect(() => {
-    const loadScript = (src: string) => new Promise((resolve) => {
-      const script = document.createElement('script');
-      script.src = src; script.async = true; script.onload = resolve;
-      document.body.appendChild(script);
-    });
-
-    const initAll = async () => {
+    const init = async () => {
       await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js');
       await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
 
       const gsap = (window as any).gsap;
       const ScrollTrigger = (window as any).ScrollTrigger;
-      if (!gsap) return;
+      if (!gsap || !ScrollTrigger) return;
       gsap.registerPlugin(ScrollTrigger);
 
-      // --- CURSOR LOGIC ---
+      // ----- CUSTOM CURSOR -----
       const cur = document.getElementById('cursor');
       const ring = document.getElementById('cursor-ring');
-      document.addEventListener('mousemove', e => {
-        gsap.to(cur, { x: e.clientX, y: e.clientY, duration: 0.08 });
-        gsap.to(ring, { x: e.clientX, y: e.clientY, duration: 0.25 });
-      });
+      let mx = 0,
+        my = 0;
+      const onMouseMove = (e: MouseEvent) => {
+        mx = e.clientX;
+        my = e.clientY;
+        gsap.to(cur, { x: mx, y: my, duration: 0.08, ease: 'power2.out' });
+        gsap.to(ring, { x: mx, y: my, duration: 0.25, ease: 'power2.out' });
+      };
+      document.addEventListener('mousemove', onMouseMove);
 
-      // --- BACKGROUND CANVAS (Floating Particles & Grids) ---
+      const addHoverEffects = () => {
+        document.querySelectorAll('a, button, h1, h2, .report-card').forEach((el) => {
+          el.addEventListener('mouseenter', () => {
+            gsap.to(cur, { width: 6, height: 6, duration: 0.2 });
+            gsap.to(ring, { width: 60, height: 60, borderColor: 'rgba(0,255,180,0.7)', duration: 0.3 });
+          });
+          el.addEventListener('mouseleave', () => {
+            gsap.to(cur, { width: 12, height: 12, duration: 0.2 });
+            gsap.to(ring, { width: 36, height: 36, borderColor: 'rgba(0,255,180,0.4)', duration: 0.3 });
+          });
+        });
+      };
+      addHoverEffects();
+
+      // ----- BACKGROUND CANVAS (particles + orbs) -----
       const canvas = document.getElementById('bg-canvas') as HTMLCanvasElement;
       if (canvas) {
-        const ctx = canvas.getContext('2d')!;
-        let w = canvas.width = window.innerWidth;
-        let h = canvas.height = window.innerHeight;
-        window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+        const ctx = canvas.getContext('2d');
+        let w = (canvas.width = window.innerWidth);
+        let h = (canvas.height = window.innerHeight);
+        window.addEventListener('resize', () => {
+          w = canvas.width = window.innerWidth;
+          h = canvas.height = window.innerHeight;
+        });
+
+        let scrollY = 0,
+          targetScrollY = 0;
+        window.addEventListener('scroll', () => (targetScrollY = window.scrollY));
 
         const pts = Array.from({ length: 80 }, () => ({
-          x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + 0.3,
-          vx: (Math.random() - 0.5) * 0.0003, vy: (Math.random() - 0.5) * 0.0003,
-          alpha: Math.random() * 0.4 + 0.05
+          x: Math.random(),
+          y: Math.random(),
+          r: Math.random() * 1.2 + 0.3,
+          vx: (Math.random() - 0.5) * 0.0003,
+          vy: (Math.random() - 0.5) * 0.0003,
+          alpha: Math.random() * 0.4 + 0.05,
         }));
 
-        const draw = () => {
-          ctx.clearRect(0, 0, w, h);
-          ctx.fillStyle = '#04040c'; ctx.fillRect(0, 0, w, h);
-          
-          // Grid
-          ctx.strokeStyle = 'rgba(255,255,255,0.02)';
-          for (let x = 0; x < w; x += 80) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-          for (let y = 0; y < h; y += 80) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+        const orbs = [
+          { x: 0.5, y: 0.3, r: 0.4, color: [0, 255, 180], phase: 0 },
+          { x: 0.15, y: 0.6, r: 0.35, color: [0, 170, 255], phase: 2 },
+          { x: 0.85, y: 0.7, r: 0.38, color: [255, 0, 170], phase: 4 },
+          { x: 0.5, y: 1.0, r: 0.4, color: [255, 200, 0], phase: 6 },
+        ];
 
-          pts.forEach(p => {
-            p.x += p.vx; p.y += p.vy;
-            if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
-            ctx.beginPath(); ctx.arc(p.x * w, p.y * h, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0,255,180,${p.alpha})`; ctx.fill();
+        let t = 0;
+        const draw = () => {
+          scrollY += (targetScrollY - scrollY) * 0.06;
+          t += 0.008;
+          ctx!.clearRect(0, 0, w, h);
+          ctx!.fillStyle = '#04040c';
+          ctx!.fillRect(0, 0, w, h);
+
+          const scrollProgress = scrollY / (document.body.scrollHeight - window.innerHeight || 1);
+          orbs.forEach((orb, i) => {
+            const ox = orb.x * w + Math.sin(t + orb.phase) * w * 0.08;
+            const oy = (orb.y + scrollProgress * 0.3 * (i % 2 === 0 ? -1 : 1)) * h + Math.cos(t * 0.7 + orb.phase) * h * 0.05;
+            const gr = ctx!.createRadialGradient(ox, oy, 0, ox, oy, orb.r * w);
+            gr.addColorStop(0, `rgba(${orb.color.join(',')},0.08)`);
+            gr.addColorStop(1, `rgba(${orb.color.join(',')},0)`);
+            ctx!.fillStyle = gr;
+            ctx!.fillRect(0, 0, w, h);
+          });
+
+          const gridOffset = (scrollY * 0.15) % 80;
+          ctx!.strokeStyle = 'rgba(255,255,255,0.02)';
+          ctx!.lineWidth = 1;
+          for (let x = 0; x < w + 80; x += 80) {
+            ctx!.beginPath();
+            ctx!.moveTo(x, 0);
+            ctx!.lineTo(x, h);
+            ctx!.stroke();
+          }
+          for (let y = -80 + (gridOffset % 80); y < h + 80; y += 80) {
+            ctx!.beginPath();
+            ctx!.moveTo(0, y);
+            ctx!.lineTo(w, y);
+            ctx!.stroke();
+          }
+
+          pts.forEach((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0) p.x = 1;
+            if (p.x > 1) p.x = 0;
+            if (p.y < 0) p.y = 1;
+            if (p.y > 1) p.y = 0;
+            ctx!.beginPath();
+            ctx!.arc(p.x * w, p.y * h - scrollY * 0.02, p.r, 0, Math.PI * 2);
+            ctx!.fillStyle = `rgba(0,255,180,${p.alpha})`;
+            ctx!.fill();
           });
           requestAnimationFrame(draw);
         };
         draw();
       }
 
-      // --- TYPEWRITER ---
-      const sub = document.getElementById('welcome-sub');
-      if (sub) {
-        const text = sub.innerText; sub.innerText = '';
-        let i = 0;
-        const type = () => { if(i <= text.length) { sub.innerText = text.substring(0, i++); setTimeout(type, 30); } };
-        setTimeout(type, 1000);
+      // ----- TYPEWRITER (agar text diya ho) -----
+      if (typewriterText) {
+        const subEl = document.getElementById('typewriter-target');
+        if (subEl) {
+          subEl.textContent = '';
+          let i = 0;
+          const type = () => {
+            if (i <= typewriterText.length) {
+              subEl!.textContent = typewriterText.substring(0, i);
+              i++;
+              setTimeout(type, 28);
+            }
+          };
+          setTimeout(type, 1200);
+        }
       }
 
-      // --- SCENE ANIMATIONS ---
-      gsap.from('.welcome-title', { opacity: 0, y: 100, duration: 1.5, ease: 'power4.out' });
-      document.querySelectorAll('.scene').forEach(scene => {
-        const head = scene.querySelector('.scene-heading, .deals-tagline');
-        if(head) gsap.from(head, { opacity: 0, y: 60, scrollTrigger: { trigger: scene, start: 'top 70%' } });
+      // ----- REVEAL ANIMATIONS (scenes ke liye) -----
+      const scenes = document.querySelectorAll('.scene');
+      scenes.forEach((scene, idx) => {
+        if (idx === 0) return;
+        const heading = scene.querySelector('.scene-heading, .deals-tagline');
+        const body = scene.querySelector('.scene-body');
+        const label = scene.querySelector('.scene-label');
+        const bigNum = scene.querySelector('.big-number');
+        if (label) gsap.from(label, { opacity: 0, x: -30, duration: 1, scrollTrigger: { trigger: scene, start: 'top 75%' } });
+        if (heading) gsap.from(heading, { opacity: 0, y: 80, duration: 1.2, scrollTrigger: { trigger: scene, start: 'top 70%' } });
+        if (body) gsap.from(body, { opacity: 0, y: 40, duration: 1.2, delay: 0.2, scrollTrigger: { trigger: scene, start: 'top 68%' } });
+        if (bigNum) gsap.from(bigNum, { opacity: 0, scale: 0.8, duration: 1.5, scrollTrigger: { trigger: scene, start: 'top 80%' } });
+      });
+
+      // ----- PARALLAX -----
+      scenes.forEach((scene) => {
+        const heading = scene.querySelector('.scene-heading, .deals-tagline, .welcome-title');
+        if (heading) gsap.to(heading, { y: -60, ease: 'none', scrollTrigger: { trigger: scene, start: 'top bottom', end: 'bottom top', scrub: 1.5 } });
+      });
+
+      // background color change on scroll
+      const bgColors = ['#04040c', '#02080f', '#0a0208', '#07060a', '#04040c', '#04040c'];
+      scenes.forEach((scene, i) => {
+        ScrollTrigger.create({
+          trigger: scene,
+          start: 'top 50%',
+          onEnter: () => gsap.to('body', { backgroundColor: bgColors[i % bgColors.length], duration: 1.2 }),
+          onLeaveBack: () => gsap.to('body', { backgroundColor: bgColors[Math.max(0, i - 1) % bgColors.length], duration: 1.2 }),
+        });
       });
     };
-    initAll();
-  }, []);
 
-  return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: `
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --g: #00ffb4; --p: #ff00aa; --b: #00aaff; }
-        body { background: #04040c; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; cursor: none; }
-        #cursor { position: fixed; width: 12px; height: 12px; background: var(--g); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
-        #cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(0,255,180,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); }
-        #bg-canvas { position: fixed; inset: 0; z-index: 0; }
-        .scene { position: relative; z-index: 10; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 100px 10vw; }
-        
-        .welcome-title { font-size: clamp(4rem, 10vw, 10rem); font-weight: 900; line-height: 0.9; letter-spacing: -5px; text-align: center; }
-        .scene-label { font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase; color: var(--g); margin-bottom: 20px; }
-        .scene-heading { font-size: clamp(3rem, 7vw, 7rem); font-weight: 900; line-height: 0.95; margin-bottom: 30px; }
-        .muted { color: rgba(255,255,255,0.2); }
-        .scene-body { font-size: 1.2rem; color: rgba(255,255,255,0.4); max-width: 600px; line-height: 1.6; margin-bottom: 30px; }
-
-        .report-card { 
-          background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,180,0.15); 
-          padding: 40px; border-radius: 12px; transition: all 0.4s ease; 
-          backdrop-filter: blur(15px); position: relative; overflow: hidden;
-        }
-        .report-card:hover { 
-          transform: perspective(1000px) rotateX(4deg) translateY(-10px);
-          border-color: var(--g); box-shadow: 0 30px 60px rgba(0,255,180,0.15);
-        }
-        .scan-line {
-          position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-          background: linear-gradient(90deg, transparent, var(--g), transparent);
-          animation: scan 4s linear infinite;
-        }
-        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
-      `}} />
-
-      <canvas id="bg-canvas"></canvas>
-      <div id="cursor"></div>
-      <div id="cursor-ring"></div>
-
-      {/* SCENE 1 — WELCOME */}
-      <section className="scene" id="scene-welcome" style={{ textAlign: 'center', alignItems: 'center' }}>
-        <p className="scene-label">The world in one place</p>
-        <h1 className="welcome-title">TRUTH <br/><span style={{color:'var(--g)'}}>WIREHUB</span></h1>
-        <p className="scene-body" id="welcome-sub">Every trend. Every story. Every deal — extracted from the global pulse, in real time.</p>
-      </section>
-
-      {/* SCENE 2 — TECH */}
-      <section className="scene" id="scene-tech">
-        <div style={{ position:'absolute', right:'10vw', fontSize:'15rem', opacity:0.05, fontWeight:900 }}>02</div>
-        <p className="scene-label">Technology</p>
-        <h2 className="scene-heading">The World's <br/><span className="muted">Intelligence</span> Engine</h2>
-        <p className="scene-body">We scan the internet so you don't have to. Markets, geopolitics, sports, and viral culture shifts — all delivered as actionable intelligence.</p>
-      </section>
-
-      {/* SCENE 3 — NEWS */}
-      <section className="scene" id="scene-news" style={{ textAlign: 'right', alignItems: 'flex-end' }}>
-        <div style={{ position:'absolute', left:'10vw', fontSize:'15rem', opacity:0.05, fontWeight:900 }}>03</div>
-        <p className="scene-label" style={{ color: 'var(--p)' }}>Breaking News</p>
-        <h2 className="scene-heading">Stories That <br/><span className="muted">Truly</span> Matter</h2>
-        <p className="scene-body">From underground tech labs to viral culture shifts — we find what's moving the world before it reaches your feed.</p>
-      </section>
-
-      {/* SCENE 4.5 — ADVANCE LIVE FEED */}
-      <section className="scene" id="scene-reports" style={{ background: '#020207' }}>
-        <p className="scene-label">Live Feed // Intelligence</p>
-        <h2 className="scene-heading">Latest <span className="muted">Briefings</span></h2>
-        
-        <div style={{ width: '100%', maxWidth: '900px' }}>
-          {reports.length === 0 ? (
-            <div className="report-card">WAITING_FOR_DATA_STREAM...</div>
-          ) : (
-            reports.map((rep, idx) => (
-              <Link href="/sequence" key={idx} style={{ textDecoration: 'none', color: 'inherit', display: 'block', marginBottom: '30px' }}>
-                <div className="report-card">
-                  <div className="scan-line"></div>
-                  <p style={{ color: 'var(--g)', fontSize: '0.7rem', letterSpacing: '3px', marginBottom: '10px' }}>
-                    LOG_ENTRY_{idx + 1} // {rep.date_recorded ? new Date(rep.date_recorded).toLocaleTimeString() : 'LIVE'}
-                  </p>
-                  <h3 style={{ fontSize: '1.8rem', fontWeight: '900', marginBottom: '15px' }}>ENCRYPTED_INTEL_RECEIVED</h3>
-                  <div style={{ color: 'var(--g)', fontSize: '0.75rem', border: '1px solid var(--g)', display: 'inline-block', padding: '8px 20px', textTransform:'uppercase' }}>
-                    Open Sequence Analysis →
-                  </div>
-                </div>
-              </Link>
-            ))
-          )}
-        </div>
-      </section>
-
-      {/* SCENE 4 — DEALS */}
-      <section className="scene" id="scene-deals" style={{ alignItems: 'center', textAlign: 'center' }}>
-        <p className="scene-label" style={{ color: '#ffcc00' }}>Best Deals</p>
-        <h2 className="scene-heading">When Trends Move, <br/><em>So Do Prices</em></h2>
-        <p className="scene-body">The moment a product enters the conversation, we surface the best offer for it. Curated in real time.</p>
-        <Link href="/archive" style={{ marginTop: '40px', color: 'var(--g)', textDecoration: 'none', border: '1px solid var(--g)', padding: '18px 50px', fontSize: '0.8rem', letterSpacing: '4px', textTransform:'uppercase', fontWeight:'bold' }}>
-           Explore Full Archive
-        </Link>
-      </section>
-
-      {/* SCENE 5 — FINALE */}
-      <section className="scene" style={{ textAlign: 'center', alignItems: 'center' }}>
-        <h2 className="scene-heading" style={{ fontSize: 'clamp(4rem, 12vw, 12rem)' }}>SOMETHING <br/><span className="muted">BIG IS</span> <br/><span style={{ color: 'var(--g)' }}>COMING</span></h2>
-        <p style={{ color: 'var(--g)', letterSpacing: '15px', textTransform: 'uppercase', fontSize: '0.8rem', marginTop: '40px' }}>Stay on the wire // 2026</p>
-      </section>
-    </>
-  )
-}
+    init();
+    return () => {
+      // Cleanup if needed (GSAP ScrollTriggers etc.)
+    };
+  }, [typewriterText]);
+};
