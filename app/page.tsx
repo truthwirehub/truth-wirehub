@@ -334,43 +334,76 @@ export default function Home() {
         <div className="scene-rule"></div>
       </section>
 
-      {/* NAYA: SCENE 4.5 — LIVE REPORTS */}
-      <section className="scene" id="scene-reports" style={{ alignItems: 'flex-start', padding: '100px 10vw' }}>
-        <p className="scene-label" style={{ color: 'var(--b)' }}>Live Feed</p>
-        <h2 className="scene-heading" style={{ fontSize: 'clamp(2.5rem, 6vw, 6rem)', marginBottom: '40px' }}>
-          Latest <span className="muted">Briefings</span>
-        </h2>
-        
-        <div style={{ width: '100%', maxWidth: '900px' }}>
-          {reports.length === 0 ? (
-            <p style={{ color: 'rgba(255,255,255,0.4)' }}>Fetching latest intelligence from the wire...</p>
-          ) : (
-            reports.map((rep, idx) => (
-              <div key={idx} className="report-card">
-                <p style={{ color: 'var(--g)', fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px' }}>
-                  Recorded: {rep.date_recorded || 'Live Update'}
-                </p>
-                {/* Yahan par aapki AI ki banayi hui Report HTML format mein ayegi */}
-                <div className="report-content" dangerouslySetInnerHTML={{ __html: rep.ai_analysis }} />
-              </div>
-            ))
-          )}
+    
+      {/* NAYA: SCENE 4.5 — LIVE REPORTS (Minimalist Version) */}
+<section className="scene" id="scene-reports" style={{ alignItems: 'flex-start', padding: '100px 10vw' }}>
+  <p className="scene-label" style={{ color: 'var(--b)' }}>Live Feed</p>
+  <h2 className="scene-heading" style={{ fontSize: 'clamp(2.5rem, 6vw, 6rem)', marginBottom: '40px' }}>
+    Latest <span className="muted">Briefings</span>
+  </h2>
+  
+  <div style={{ width: '100%', maxWidth: '900px' }}>
+    {reports.length === 0 ? (
+      <p style={{ color: 'rgba(255,255,255,0.4)' }}>Fetching latest intelligence from the wire...</p>
+    ) : (
+      /* Sirf Latest 3 updates dikhayega */
+      reports.slice(0, 3).map((rep, idx) => (
+        <div key={idx} className="report-card" style={{ 
+          borderLeft: '1px solid var(--g)', 
+          paddingLeft: '30px', 
+          marginBottom: '40px',
+          background: 'rgba(255,255,255,0.02)',
+          padding: '25px',
+          borderRadius: '4px'
+        }}>
+          {/* Timestamp Header */}
+          <p style={{ color: 'var(--g)', fontSize: '0.7rem', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '10px' }}>
+            LOG_ENTRY // {new Date(rep.date_recorded).toLocaleString()}
+          </p>
+
+          {/* Chota Preview Title */}
+          <h3 style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '15px', fontWeight: '800' }}>
+            MARKET_INTELLIGENCE_DETECTED
+          </h3>
+
+          {/* Sequence Page Link - Asli Detail yahan hogi */}
+          <Link href="/sequence" style={{
+            display: 'inline-block',
+            color: '#fff',
+            fontSize: '0.75rem',
+            textDecoration: 'none',
+            border: '1px solid rgba(255,255,255,0.3)',
+            padding: '8px 20px',
+            letterSpacing: '2px',
+            textTransform: 'uppercase',
+            transition: '0.3s'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.borderColor = '#00ffb4'}
+          onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'}
+          >
+            Open Sequence Analysis →
+          </Link>
         </div>
-      </section>
-<div style={{ paddingBottom: '100px', textAlign: 'center', position: 'relative', zIndex: 20 }}>
+      ))
+    )}
+  </div>
+</section>
+
+{/* Explore Archive Button - Page ke center mein */}
+<div style={{ paddingBottom: '120px', textAlign: 'center', position: 'relative', zIndex: 20 }}>
   <Link href="/archive" style={{
-    padding: '15px 35px',
+    padding: '18px 45px',
     border: '1px solid var(--g)',
-    color: 'var(--g)',
+    color: '#00ffb4',
     textDecoration: 'none',
-    fontSize: '0.7rem',
-    letterSpacing: '3px',
+    fontSize: '0.75rem',
+    letterSpacing: '4px',
     textTransform: 'uppercase',
     borderRadius: '2px',
-    background: 'rgba(0, 255, 180, 0.05)',
-    transition: 'all 0.3s'
+    background: 'rgba(0, 255, 180, 0.03)',
+    fontWeight: 'bold'
   }}>
-    Explore Full Intelligence Archive
+    Database History Archive
   </Link>
 </div>
       {/* SCENE 5 — FINALE */}
