@@ -1,80 +1,38 @@
-// app/archive/page.tsx
-'use client';
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useAdvancedAnimations } from '@/hooks/useAdvancedAnimations';
+'use client'
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 export default function ArchivePage() {
-  const [reports, setReports] = useState<any[]>([]);
-  useAdvancedAnimations(); // common animations (bina typewriter ke)
+  const [reports, setReports] = useState<any[]>([])
 
   useEffect(() => {
     const fetchArchive = async () => {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-      if (!url || !key) return;
-      const res = await fetch(`${url}/rest/v1/crypto_data?select=ai_analysis,date_recorded&order=id.desc&limit=20`, {
-        headers: { apikey: key, Authorization: `Bearer ${key}` },
-      });
-      const data = await res.json();
-      if (data) setReports(data);
-    };
-    fetchArchive();
-  }, []);
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      const res = await fetch(`${url}/rest/v1/crypto_data?select=*&order=id.desc`, {
+        headers: { 'apikey': key!, 'Authorization': `Bearer ${key}` }
+      })
+      const data = await res.json()
+      setReports(data)
+    }
+    fetchArchive()
+  }, [])
 
   return (
-    <>
-      <canvas id="bg-canvas" />
-      <div className="noise" />
-      <div id="cursor" />
-      <div id="cursor-ring" />
-
-      <section className="scene" style={{ textAlign: 'center', justifyContent: 'center' }}>
-        <div className="glow-orb" style={{ width: '600px', height: '600px', background: 'var(--b)', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', opacity: 0.1 }} />
-        <p className="scene-label">ARCHIVE // DATABASE</p>
-        <h1 className="scene-heading">
-          Historical <span className="muted">Intel</span>
-        </h1>
-        <p className="scene-body" style={{ maxWidth: '700px' }}>
-          Complete record of all AI‑generated briefings. Scroll through past insights.
-        </p>
-        <div className="scene-rule" />
-      </section>
-
-      <section className="scene" style={{ alignItems: 'flex-start', padding: '60px 10vw' }}>
-        <div style={{ width: '100%', maxWidth: '1000px', margin: '0 auto' }}>
-          {reports.length === 0 ? (
-            <p style={{ color: 'rgba(255,255,255,0.4)' }}>Loading archive...</p>
-          ) : (
-            reports.map((rep, idx) => (
-              <div key={idx} className="report-card" style={{ position: 'relative', marginBottom: '30px' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, transparent, #00ffb4, transparent)', animation: 'scan 3s linear infinite' }} />
-                <p style={{ color: 'var(--g)', fontSize: '0.7rem', letterSpacing: '2px' }}>
-                  {new Date(rep.date_recorded).toLocaleString()}
-                </p>
-                <div className="report-content">
-                  {/* Agar ai_analysis JSON hai toh use karo, warna raw text */}
-                  {typeof rep.ai_analysis === 'object' ? (
-                    <>
-                      <h3>{rep.ai_analysis.title || 'Market Pulse'}</h3>
-                      <p>{rep.ai_analysis.summary}</p>
-                      <ul>{(rep.ai_analysis.key_points || []).map((pt: string, i: number) => <li key={i}>{pt}</li>)}</ul>
-                    </>
-                  ) : (
-                    <p>{rep.ai_analysis}</p>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-
-      <div style={{ textAlign: 'center', paddingBottom: '100px' }}>
-        <Link href="/" style={{ padding: '12px 30px', border: '1px solid var(--g)', color: '#00ffb4', textDecoration: 'none', letterSpacing: '2px' }}>
-          ← BACK TO HOME
-        </Link>
+    <div style={{ background: '#04040c', minHeight: '100vh', padding: '60px 5vw', fontFamily: 'monospace' }}>
+      <Link href="/" style={{ color: '#00ffb4', textDecoration: 'none', fontSize: '0.8rem', letterSpacing: '2px' }}>← TERMINAL_EXIT</Link>
+      <h1 style={{ fontSize: '5rem', fontWeight: 900, margin: '40px 0', color: 'rgba(255,255,255,0.05)' }}>DATA_ARCHIVE</h1>
+      
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
+        {reports.map((rep, i) => (
+          <div key={i} style={{ border: '1px solid rgba(255,255,255,0.1)', padding: '25px', background: 'rgba(255,255,255,0.02)' }}>
+            <p style={{ color: '#00ffb4', fontSize: '0.7rem' }}>{new Date(rep.date_recorded).toLocaleDateString()}</p>
+            <h3 style={{ margin: '15px 0', fontSize: '1rem' }}>INTEL_LOG #{rep.id}</h3>
+            <p style={{ fontSize: '0.8rem', opacity: 0.5, lineHeight: 1.6 }}>{rep.report_main?.substring(0, 100)}...</p>
+            <Link href="/sequence" style={{ display: 'block', marginTop: '20px', color: '#fff', fontSize: '0.7rem' }}>RE-RUN_ANALYSIS →</Link>
+          </div>
+        ))}
       </div>
-    </>
-  );
+    </div>
+  )
 }
