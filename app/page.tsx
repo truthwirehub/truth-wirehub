@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-
+import Link from 'next/link'
 export default function Home() {
   // NAYA: Data save karne ke liye state
   const [reports, setReports] = useState<any[]>([])
@@ -357,7 +357,22 @@ export default function Home() {
           )}
         </div>
       </section>
-
+<div style={{ paddingBottom: '100px', textAlign: 'center', position: 'relative', zIndex: 20 }}>
+  <Link href="/archive" style={{
+    padding: '15px 35px',
+    border: '1px solid var(--g)',
+    color: 'var(--g)',
+    textDecoration: 'none',
+    fontSize: '0.7rem',
+    letterSpacing: '3px',
+    textTransform: 'uppercase',
+    borderRadius: '2px',
+    background: 'rgba(0, 255, 180, 0.05)',
+    transition: 'all 0.3s'
+  }}>
+    Explore Full Intelligence Archive
+  </Link>
+</div>
       {/* SCENE 5 — FINALE */}
       <section className="scene" id="scene-finale" style={{ textAlign: 'center', minHeight: '100vh', justifyContent: 'center' }}>
         <div className="glow-orb" style={{ width: '600px', height: '600px', background: 'var(--g)', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', opacity: 0.08 }}></div>
