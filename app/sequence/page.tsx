@@ -49,10 +49,34 @@ export default function SequencePage() {
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', color: '#fff', overflowX: 'hidden', fontFamily: '"JetBrains Mono", monospace' }}>
-      
-      {/* 🌟 FOREGROUND LAYER (Terminal UI) 🌟 */}
-      {/* Background ab layout.tsx se automatically peeche chal raha hoga */}
       <div style={{ position: 'relative', zIndex: 10, padding: '60px 5vw' }}>
         <Link href="/" style={{ color: '#00ffb4', textDecoration: 'none', fontSize: '0.7rem', letterSpacing: '3px', border: '1px solid #00ffb4', padding: '5px 15px', textShadow: '0 0 5px #00ffb4', backgroundColor: 'rgba(0,0,0,0.5)' }}>← RET_TERMINAL</Link>
         
-        <h1 style={{ fontFamily: '"Orbitron", sans-serif', fontSize: 'clamp(2rem, 10vw, 6rem)', fontWeight: '900', margin: '40px 0', textTransform: 'uppercase', letterSpacing: '-2px', lineHeight: '0.9', color:
+        <h1 style={{ fontFamily: '"Orbitron", sans-serif', fontSize: 'clamp(2rem, 10vw, 6rem)', fontWeight: '900', margin: '40px 0', textTransform: 'uppercase', letterSpacing: '-2px', lineHeight: '0.9', color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.3)' }}>
+          INTEL <span style={{ color: 'transparent', WebkitTextStroke: '1px rgba(255,255,255,0.4)' }}>SEQUENCE</span>
+        </h1>
+
+        <div style={{ position: 'relative', maxWidth: '1100px', margin: '0 auto', padding: '40px 0' }}>
+          <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', background: 'linear-gradient(to bottom, transparent, #00ffb4, transparent)', transform: 'translateX(-50%)', opacity: 0.3, boxShadow: '0 0 10px #00ffb4' }}></div>
+
+          {sections.map((sec) => (
+            <div key={sec.id} onClick={() => setActiveBox(activeBox === sec.id ? null : sec.id)} style={{ display: 'flex', justifyContent: sec.align === 'left' ? 'flex-start' : 'flex-end', marginBottom: '80px', width: '100%', cursor: 'pointer' }}>
+              <div style={{ width: '48%', padding: '35px', background: activeBox === sec.id ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.4)', border: `1px solid ${activeBox === sec.id ? sec.color : 'rgba(255,255,255,0.1)'}`, transition: 'all 0.5s ease', boxShadow: activeBox === sec.id ? `0 0 30px ${sec.color}33` : 'none', backdropFilter: 'blur(5px)', position: 'relative' }}>
+                <h3 style={{ fontFamily: '"Orbitron", sans-serif', color: sec.color, fontSize: '0.75rem', letterSpacing: '2px', margin: 0, textShadow: activeBox === sec.id ? `0 0 10px ${sec.color}` : 'none' }}>
+                  {sec.title} 
+                </h3>
+                <div style={{ marginTop: '25px', display: activeBox === sec.id ? 'block' : 'none' }}>
+                  <div style={{ fontSize: '0.85rem', lineHeight: '2', color: 'rgba(255,255,255,0.9)', marginBottom: '30px', textAlign: 'justify', borderLeft: `2px solid ${sec.color}`, paddingLeft: '15px' }} dangerouslySetInnerHTML={{ __html: sec.content || "NO_DATA_POCKET_FOUND" }} />
+                  <Link href={`/article/${data.id}`} style={{ display: 'block', textAlign: 'center', background: sec.color, color: '#000', padding: '12px', textDecoration: 'none', fontSize: '0.7rem', letterSpacing: '4px', fontWeight: '900', fontFamily: '"Orbitron", sans-serif', clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)' }}>
+                    ACCESS_DOSSIER_ →
+                  </Link>
+                </div>
+                {!activeBox && <div style={{marginTop:'20px', color:sec.color, fontSize:'0.55rem', opacity:0.6, letterSpacing:'3px'}}>STATUS: ENCRYPTED_STREAMS</div>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
