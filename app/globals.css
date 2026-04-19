@@ -5,9 +5,13 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
+body {
+  background-image: 
+    linear-gradient(rgba(0, 255, 180, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 180, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
   background-color: #04040c;
-  color: white;
-  overflow-x: hidden;
+}
 }
 
 .glow-orb {
