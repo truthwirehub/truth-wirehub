@@ -319,32 +319,7 @@ export default function Home() {
         <div className="scene-rule"></div>
       </section>
 
-      {/* reports.slice(0, 3).map ke andar ka code update karein */}
-{reports.slice(0, 3).map((rep, idx) => (
-  <Link href="/sequence" key={idx} style={{ textDecoration: 'none', display: 'block' }}>
-    <div className="report-card" style={{ 
-      position: 'relative',
-      border: '1px solid rgba(0, 255, 180, 0.2)', 
-      background: 'rgba(0, 255, 180, 0.03)',
-      backdropFilter: 'blur(10px)', 
-      padding: '30px', 
-      marginBottom: '40px',
-      borderRadius: '8px',
-      boxShadow: '0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 255, 180, 0.05)',
-      transform: 'perspective(1000px) rotateX(2deg)',
-      transition: 'all 0.4s ease',
-      cursor: 'pointer' // Mouse pointer batayega ke ye poora clickable hai
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) translateY(-10px) scale(1.02)';
-      e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.8)';
-      e.currentTarget.style.boxShadow = '0 30px 60px rgba(0, 255, 180, 0.2)';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.transform = 'perspective(1000px) rotateX(2deg)';
-      e.currentTarget.style.borderColor = 'rgba(0, 255, 180, 0.2)';
-      e.currentTarget.style.boxShadow = '0 20px 50px rgba(0,0,0,0.5)';
-    }}
+     
     >
       <div style={{
         position: 'absolute',
