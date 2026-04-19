@@ -1,20 +1,23 @@
 'use client'
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
+// SSR: false ka matlab hai server isay touch bhi na kare
 const Spline = dynamic(() => import('@splinetool/react-spline'), { 
-  ssr: false 
+  ssr: false,
+  loading: () => <div style={{ background: '#020205', width: '100vw', height: '100vh' }} />
 })
 
 export default function SplineBackground() {
-  const [mounted, setMounted] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
-  // 🚀 Yeh ensure karega ke 3D sirf browser mein load ho
   useEffect(() => {
-    setMounted(true)
+    setIsClient(true)
   }, [])
 
-  if (!mounted) return <div style={{ background: '#020205', width: '100vw', height: '100vh' }} />;
+  if (!isClient) {
+    return <div style={{ background: '#020205', width: '100vw', height: '100vh' }} />
+  }
 
   return (
     <div style={{ 
@@ -24,11 +27,10 @@ export default function SplineBackground() {
       width: '100vw', 
       height: '100vh', 
       zIndex: -1, 
-      backgroundColor: '#020205' 
+      backgroundColor: '#020205',
+      pointerEvents: 'none' // Taake 3D background aapke buttons ko block na kare
     }}>
-      <Suspense fallback={<div style={{ background: '#020205', width: '100%', height: '100%' }} />}>
-        <Spline scene="https://prod.spline.design/53quz3hlIk7klVEdAfdY3RgZ/scene.splinecode" />
-      </Suspense>
+      <Spline scene="https://prod.spline.design/53quz3hlIk7klVEdAfdY3RgZ/scene.splinecode" />
     </div>
   )
 }

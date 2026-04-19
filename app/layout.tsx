@@ -2,7 +2,7 @@ import './globals.css'
 import SplineBackground from './SplineBackground'
 
 export const metadata = {
-  title: 'Truth WireHub',
+  title: 'Wajood - Intelligence Sequence',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body style={{ margin: 0, background: '#020205' }}>
         <SplineBackground />
-        <main style={{ position: 'relative', zIndex: 10 }}>
+        <main style={{ position: 'relative', zIndex: 1 }}>
           {children}
         </main>
       </body>
